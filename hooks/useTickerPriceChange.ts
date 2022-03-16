@@ -21,5 +21,5 @@ export const useTickerPriceChange = (assets?: string[]) =>
   useQuery(["tickers", assets], fetchTickerPriceChange, {
     enabled: Boolean(assets?.length),
     refetchInterval: DEFAULT_REFETCH_INTERVAL,
-    keepPreviousData: false,
+    keepPreviousData: true,
   });
