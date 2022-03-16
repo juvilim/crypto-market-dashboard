@@ -21,7 +21,7 @@ export const hasKeyword = (values: string[], keyword: string) => {
 const currencyFormatOptions: Intl.NumberFormatOptions = {
   style: "currency",
   currency: "USD",
-  minimumFractionDigits: 5,
+  maximumFractionDigits: 8,
 };
 let currencyFormatter: Intl.NumberFormat | undefined = undefined;
 
@@ -32,28 +32,22 @@ export const currencyFormat = (value: number) => {
   return currencyFormatter.format(value);
 };
 
-const abbreviateNumber = (number: any, decimalPlaces: number) => {
-  decimalPlaces = Math.pow(10, decimalPlaces);
+const numberFormatOptions: Intl.NumberFormatOptions = {
+  maximumFractionDigits: 2,
+};
+let numberFormatter: Intl.NumberFormat | undefined = undefined;
 
-  const abbrev = ["K", "M", "B", "T"];
-
-  for (var i = abbrev.length - 1; i >= 0; i--) {
-    let size = Math.pow(10, (i + 1) * 3);
-
-    if (size <= number) {
-      number = Math.round((number * decimalPlaces) / size) / decimalPlaces;
-
-      if (number == 1000 && i < abbrev.length - 1) {
-        number = 1;
-        i++;
-      }
-
-      number += abbrev[i];
-      break;
-    }
+const numberFormat = (value: number) => {
+  if (!numberFormatter) {
+    numberFormatter = new Intl.NumberFormat("en", numberFormatOptions);
   }
-
-  return number;
+  return numberFormatter.format(value);
 };
 
-export const bigNumberFormat = (value: number) => abbreviateNumber(value, 2);
+export const toMillionFormat = (number: any) => {
+  if (number < Math.pow(10, 6)) {
+    return numberFormat(number);
+  }
+
+  return numberFormat(number / Math.pow(10, 6)) + "M";
+};

@@ -1,14 +1,13 @@
 import { useQuery } from "react-query";
 import { fetchWrapper } from "../utils";
 
-export interface CryptoCurrencyAsset {
-  id: string;
-  assetCode: string;
-  assetName: string;
-  logoUrl: string;
-  fullLogoUrl: string;
+interface CryptoCurrencyAsset {
+  name: string;
+  fullName: string;
+  logo: string;
+  symbol: string;
+  price: number;
   tags: string[];
-  plateType: string | null;
 }
 
 interface Response {
@@ -20,9 +19,9 @@ interface Response {
 
 const fetchAssets = async () => {
   return await fetchWrapper<Response>(
-    "https://www.binance.com/bapi/asset/v2/public/asset/asset/get-all-asset"
+    "https://www.binance.com/bapi/composite/v1/public/marketing/symbol/list"
   );
 };
 
 export const useAssets = (queryKeys: Record<string, any>) =>
-  useQuery(["assets", queryKeys], fetchAssets, { keepPreviousData: true });
+  useQuery(["symbolList", queryKeys], fetchAssets);

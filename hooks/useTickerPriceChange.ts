@@ -2,7 +2,7 @@ import { useQuery } from "react-query";
 import { DEFAULT_REFETCH_INTERVAL } from "../constants";
 import { fetchWrapper } from "../utils";
 
-export interface Ticker {
+interface Ticker {
   symbol: string;
   priceChange: string;
   priceChangePercent: string;
@@ -11,21 +11,15 @@ export interface Ticker {
   volume: string;
 }
 
-type Response = Ticker;
-
-const fetchTickerPriceChange = async (tradingPair: string) => {
-  console.log("fetchTickerPriceChange", tradingPair);
-  let queryParam = "";
-  if (tradingPair) queryParam = `?symbol=${tradingPair}`;
-
-  return await fetchWrapper<Response>(
-    `https://api.binance.com/api/v3/ticker/24hr${queryParam}`
+const fetchTickerPriceChange = async () => {
+  return await fetchWrapper<Ticker[]>(
+    "https://api.binance.com/api/v3/ticker/24hr"
   );
 };
 
-export const useTickerPriceChange = (tradingPair: any) =>
-  useQuery(["ticker", tradingPair], () => fetchTickerPriceChange(tradingPair), {
-    enabled: Boolean(tradingPair),
+export const useTickerPriceChange = (assets?: string[]) =>
+  useQuery(["tickers", assets], fetchTickerPriceChange, {
+    enabled: Boolean(assets?.length),
     refetchInterval: DEFAULT_REFETCH_INTERVAL,
     keepPreviousData: false,
   });

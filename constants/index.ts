@@ -19,11 +19,12 @@ export const TAGS = [
   { tag: "ETF", display: "ETF" },
 ];
 export const TABLE_COLUMNS = [
-  { label: "Name", value: "assetName" },
-  { label: "Latest Price", value: "lastPrice" },
-  { label: "24h Change", value: "priceChangePercent" },
-  { label: "24h Volume", value: "volume" },
+  { label: "Name", value: "name", width: "40%" },
+  { label: "Latest Price", value: "lastPrice", width: "20%" },
+  { label: "24h Change", value: "priceChangePercent", width: "20%" },
+  { label: "24h Volume", value: "volume", width: "20%" },
 ];
+export const DEFAULT_SORT_KEY = "symbol";
 export const DEFAULT_PAGE = 1;
 export const DEFAULT_PAGE_SIZE = 20;
 export enum SortOrder {

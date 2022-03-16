@@ -1,30 +1,32 @@
 import { SortOrder, TABLE_COLUMNS } from "../constants";
-import Coin from "./Coin";
+import { CryptoData, SortingRule } from "../types";
+
+import Crypto from "./Crypto";
 import { SortIcon, SortUpIcon, SortDownIcon } from "./SortIcon";
 
-export interface SortingRule {
-  sortBy: string;
-  order: SortOrder;
-}
-
 interface Props {
-  data?: any[];
+  data: CryptoData[];
   sort?: SortingRule;
   onColumnHeaderClick: (selectedColumn: string) => () => void;
 }
 
 const Table = ({ data, sort, onColumnHeaderClick }: Props) => {
   return (
-    <table className="w-full">
-      <thead>
-        <tr className="bg-gray-100 border-gray-50 border-b-0">
-          {TABLE_COLUMNS.map(({ label, value }, index) => (
-            <th
+    <div className="flex justify-between md:table w-full">
+      <div className="hidden md:table-header-group">
+        <div className="table-row bg-gray-100 border-gray-50 border-b-0">
+          {TABLE_COLUMNS.map(({ label, value, width }, index) => (
+            <div
               key={index}
-              className="py-3 px-4 text-xs font-normal"
+              className="md:table-cell align-middle py-3 px-4 text-xs font-normal"
               onClick={onColumnHeaderClick(value)}
+              style={{ width }}
             >
-              <div className="flex items-center space-x-1">
+              <div
+                className={`flex items-center ${
+                  index !== 0 ? "justify-end" : ""
+                } space-x-1`}
+              >
                 <span>{label}</span>
                 {!sort || sort.sortBy !== value ? (
                   <SortIcon />
@@ -34,23 +36,16 @@ const Table = ({ data, sort, onColumnHeaderClick }: Props) => {
                   <SortDownIcon />
                 )}
               </div>
-            </th>
+            </div>
           ))}
-        </tr>
-      </thead>
-      <tbody>
-        {(!data || !data.length) && (
-          <tr>
-            <td colSpan={TABLE_COLUMNS.length} className="text-center">
-              No Result
-            </td>
-          </tr>
-        )}
-        {data?.map((item) => (
-          <Coin key={item.id} assetData={item} />
+        </div>
+      </div>
+      <div className="md:table-row-group w-full">
+        {data?.map((item, index) => (
+          <Crypto key={index} data={item} />
         ))}
-      </tbody>
-    </table>
+      </div>
+    </div>
   );
 };
 
